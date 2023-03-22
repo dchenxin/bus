@@ -19,4 +19,23 @@ public class ModelClickStatisticsServiceImpl extends ServiceImpl<ModelClickStati
     @Autowired
     private ModelClickStatisticsMapper modelClickStatisticsMapper;
 
+    @Override
+    public List<ModelClickStatistics> getModelClickStatisticsByDay() {
+        return modelClickStatisticsMapper.getModelClickStatisticsByDay();
+    }
+
+    @Override
+    public List<ModelClickStatistics> getModelClickStatisticsBySevenDay() {
+        return modelClickStatisticsMapper.getModelClickStatisticsBySevenDay();
+    }
+
+    @Override
+    public List<ModelClickStatistics> getModelClickStatisticsByMonth() {
+        return modelClickStatisticsMapper.getModelClickStatisticsByMonth();
+    }
+
+    @Override
+    public List<ModelClickStatistics> getModelClickStatisticsByYear() {
+        return modelClickStatisticsMapper.getModelClickStatisticsByYear();
+    }
 }

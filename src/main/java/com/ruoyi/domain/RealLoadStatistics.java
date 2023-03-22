@@ -29,7 +29,7 @@ public class RealLoadStatistics extends BaseEntity
 
     /** 实载率(单位%) */
     @Excel(name = "实载率(单位%)")
-    private String realLoadRate;
+    private Double realLoadRate;
 
 
     /** 日期 */

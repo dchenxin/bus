@@ -11,5 +11,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2023-03-06
  */
 public interface IRealLoadStatisticsService extends IService<RealLoadStatistics> {
+    /**
+     * 获取实载率数据统计(昨日)
+     * @return
+     */
+    List<RealLoadStatistics> getRealLoadStatisticsByDay();
+
+    /**
+     * 获取实载率数据统计(今日)
+     * @return
+     */
+    List<RealLoadStatistics> getRealLoadStatisticsByToDay();
 
 }

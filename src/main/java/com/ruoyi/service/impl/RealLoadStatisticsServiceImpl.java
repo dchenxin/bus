@@ -19,4 +19,13 @@ public class RealLoadStatisticsServiceImpl extends ServiceImpl<RealLoadStatistic
     @Autowired
     private RealLoadStatisticsMapper realLoadStatisticsMapper;
 
+    @Override
+    public List<RealLoadStatistics> getRealLoadStatisticsByDay() {
+        return realLoadStatisticsMapper.getRealLoadStatisticsByDay();
+    }
+
+    @Override
+    public List<RealLoadStatistics> getRealLoadStatisticsByToDay() {
+        return realLoadStatisticsMapper.getRealLoadStatisticsByToDay();
+    }
 }

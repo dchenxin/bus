@@ -11,6 +11,8 @@ import lombok.Getter;
 public enum DateParamEnums {
     /**昨天*/
     YESTODAY("昨日"),
+    /**昨天*/
+    TODAY("今日"),
     /**近七天*/
     SEVEN_DAY("近七日"),
     /**本月*/

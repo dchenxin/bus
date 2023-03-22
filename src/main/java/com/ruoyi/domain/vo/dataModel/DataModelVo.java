@@ -1,4 +1,4 @@
-package com.ruoyi.domain.vo.DataModel;
+package com.ruoyi.domain.vo.dataModel;
 
 import lombok.Data;
 
