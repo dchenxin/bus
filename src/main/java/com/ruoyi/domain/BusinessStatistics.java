@@ -67,5 +67,9 @@ public class BusinessStatistics
     @Excel(name = "系统类型")
     private String type;
 
+    /** 所属地域 */
+    @Excel(name = "所属地域")
+    private String areaName;
+
 
 }

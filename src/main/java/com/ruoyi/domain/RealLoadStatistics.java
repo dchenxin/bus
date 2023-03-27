@@ -43,4 +43,8 @@ public class RealLoadStatistics extends BaseEntity
     private String type;
 
 
+    /** 所属地域 */
+    @Excel(name = "所属地域")
+    private String areaName;
+
 }
