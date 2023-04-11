@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import cn.hutool.core.util.NumberUtil;
 import com.google.common.collect.Lists;
 import com.ruoyi.domain.vo.businessStatistics.BusinessStatisticsDataVo;
 import com.ruoyi.domain.vo.businessStatistics.BusinessStatisticsTotalVo;
@@ -46,32 +47,46 @@ public class BusinessStatisticsController extends BaseController {
         BusinessStatisticsVo businessStatisticsVo = new BusinessStatisticsVo();
         List<BusinessStatistics> result = businessStatisticsHandler.execute(type);
         Assert.notEmpty(result,"暂无业务运营数据");
-        //x轴
-        List<String> xAxisData = Lists.newArrayList("订座数","退订数","退订金额(元)","撤销数","成交金额(元)");
-        //y轴数据
+
+//        List<String> xAxisData = Lists.newArrayList("订座数","退订数","退订金额(元)","撤销数","成交金额(元)");
+
+
         //按照地区名分组 并求各个字段和
         Map<String, List<BusinessStatistics>> map = result.stream().collect(Collectors.groupingBy(BusinessStatistics::getRegionName));
+        //x轴
+        List<String> xAxisData = Lists.newArrayList( map.keySet());
+        //订座总数
+        int bookNumTotal = result.stream().mapToInt(BusinessStatistics::getBookNum).sum();
+        //退订总数
+        int cancelNumTotal = result.stream().mapToInt(BusinessStatistics::getCancelNum).sum();
+        //退订金额总数
+        double cancelAmountTotal = DoubleUtil.format(result.stream().mapToDouble(BusinessStatistics::getCancelAmount).sum());
+        //撤销数
+        int revokeNumTotal = result.stream().mapToInt(BusinessStatistics::getRevokeNum).sum();
+        //成交金额总数
+        double successAmountTotal = DoubleUtil.format(result.stream().mapToDouble(BusinessStatistics::getSuccessAmount).sum());
+
+        //y轴数据
         List<BusinessStatisticsDataVo> data = Lists.newArrayList();
         map.keySet().forEach(s -> {
             List<BusinessStatistics> businessStatistics = map.get(s);
             BusinessStatisticsDataVo dataVo = new BusinessStatisticsDataVo();
             //key值即为地区名
             dataVo.setName(s);
-            dataVo.setData(Lists.newArrayList(
-                    businessStatistics.stream().mapToInt(BusinessStatistics::getBookNum).sum(),
-                    businessStatistics.stream().mapToInt(BusinessStatistics::getCancelNum).sum(),
-                    DoubleUtil.format(businessStatistics.stream().mapToDouble(BusinessStatistics::getCancelAmount).sum()),
-                    businessStatistics.stream().mapToInt(BusinessStatistics::getRevokeNum).sum(),
-                    DoubleUtil.format(businessStatistics.stream().mapToDouble(BusinessStatistics::getSuccessAmount).sum())));
+            dataVo.setBookNumData(DoubleUtil.getPercent(businessStatistics.stream().mapToInt(BusinessStatistics::getBookNum).sum(), bookNumTotal));
+            dataVo.setCancelNumData(DoubleUtil.getPercent(businessStatistics.stream().mapToInt(BusinessStatistics::getCancelNum).sum(),cancelNumTotal));
+            dataVo.setCancelAmountData(DoubleUtil.getPercent(businessStatistics.stream().mapToDouble(BusinessStatistics::getCancelAmount).sum(),cancelAmountTotal));
+            dataVo.setRevokeNumData(DoubleUtil.getPercent(businessStatistics.stream().mapToInt(BusinessStatistics::getRevokeNum).sum(),revokeNumTotal));
+            dataVo.setSuccessAmountData(DoubleUtil.getPercent(businessStatistics.stream().mapToDouble(BusinessStatistics::getSuccessAmount).sum(),successAmountTotal));
             data.add(dataVo);
         });
         //统计总数
         BusinessStatisticsTotalVo totalVo = BusinessStatisticsTotalVo.builder()
-                .bookNum(result.stream().mapToInt(BusinessStatistics::getBookNum).sum())
-                .cancelNum(result.stream().mapToInt(BusinessStatistics::getCancelNum).sum())
-                .cancelAmount(DoubleUtil.format(result.stream().mapToDouble(BusinessStatistics::getCancelAmount).sum()))
-                .revokeNum(result.stream().mapToInt(BusinessStatistics::getRevokeNum).sum())
-                .successAmount(DoubleUtil.format(result.stream().mapToDouble(BusinessStatistics::getSuccessAmount).sum()))
+                .bookNum(bookNumTotal)
+                .cancelNum(cancelNumTotal)
+                .cancelAmount(cancelAmountTotal)
+                .revokeNum(revokeNumTotal)
+                .successAmount(successAmountTotal)
                 .build();
 
         businessStatisticsVo.setXAxisData(xAxisData);
@@ -79,7 +94,6 @@ public class BusinessStatisticsController extends BaseController {
         businessStatisticsVo.setTotalVo(totalVo);
         return AjaxResult.success(businessStatisticsVo);
     }
-
 
 
 //    /**

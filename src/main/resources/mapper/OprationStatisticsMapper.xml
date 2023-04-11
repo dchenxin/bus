@@ -21,16 +21,19 @@
     <select id="getOprationStatisticsByDay" resultMap="OprationStatisticsResult">
         <include refid="selectsSql"></include>
         from OPRATION_STATISTICS WHERE TO_DAYS( NOW())-TO_DAYS( STATISTICS_DATE) = 1
+        order by STATISTICS_DATE
     </select>
 
     <select id="getOprationStatisticsBySevenDay" resultMap="OprationStatisticsResult">
         <include refid="selectsSql"></include>
         from OPRATION_STATISTICS WHERE STATISTICS_DATE between  add_days (now(), -7)  and now()
+        order by STATISTICS_DATE
     </select>
 
     <select id="getOprationStatisticsByMonth" resultMap="OprationStatisticsResult">
         <include refid="selectsSql"></include>
         from OPRATION_STATISTICS  WHERE DATE_FORMAT(STATISTICS_DATE, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+        order by STATISTICS_DATE
     </select>
 
     <select id="getOprationStatisticsByYear" resultMap="OprationStatisticsResult">

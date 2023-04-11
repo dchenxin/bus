@@ -13,5 +13,9 @@ public class BusinessStatisticsDataVo {
     /**地区名*/
     private String name;
     /**数据*/
-    private List<Object> data;
+    private Double bookNumData;
+    private Double cancelNumData;
+    private Double cancelAmountData;
+    private Double revokeNumData;
+    private Double successAmountData;
 }
