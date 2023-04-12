@@ -71,4 +71,8 @@ public class BuyEarlyStatistics extends BaseEntity
     @Excel(name = "所属地域")
     private String areaName;
 
+    /** 线路名 */
+    @Excel(name = "线路名")
+    private String lineName;
+
 }

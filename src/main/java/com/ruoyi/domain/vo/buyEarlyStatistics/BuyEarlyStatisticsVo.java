@@ -26,6 +26,8 @@ public class BuyEarlyStatisticsVo
     /** 所属地区 */
     private String regionName;
 
+    /** 线路名 */
+    private String lineName;
 
     /** 提前1小时人数 */
     private Integer earlyOneHour;

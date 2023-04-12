@@ -13,12 +13,13 @@
         <result property="earlyOneDay" column="EARLY_ONE_DAY"/>
         <result property="earlyTwoDay" column="EARLY_TWO_DAY"/>
         <result property="earlyTwoDayOver" column="EARLY_TWO_DAY_OVER"/>
+        <result property="lineName" column="LINE_NAME"/>
         <result property="type" column="TYPE"/>
     </resultMap>
 
 
     <sql id="selectsSql">
-        select STATISTICS_DATE,REGION_NAME,EARLY_ONE_HOUR,EARLY_EIGHT,EARLY_SIXTEEN,EARLY_ONE_DAY,EARLY_TWO_DAY,EARLY_TWO_DAY_OVER,TYPE
+        select STATISTICS_DATE,REGION_NAME,EARLY_ONE_HOUR,EARLY_EIGHT,EARLY_SIXTEEN,EARLY_ONE_DAY,EARLY_TWO_DAY,EARLY_TWO_DAY_OVER,TYPE,LINE_NAME
     </sql>
 
     <select id="getBuyEarlyStatisticsByDay" resultMap="BuyEarlyStatisticsResult">

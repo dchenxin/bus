@@ -1,6 +1,7 @@
 package com.ruoyi.controller;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,6 +9,8 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
 import com.ruoyi.domain.BusinessStatistics;
+import com.ruoyi.domain.dto.BuyEarlyStatisticsDto;
+import com.ruoyi.domain.enums.BuyEarlyTypeEnums;
 import com.ruoyi.domain.vo.businessStatistics.BusinessStatisticsDataVo;
 import com.ruoyi.domain.vo.businessStatistics.BusinessStatisticsTotalVo;
 import com.ruoyi.domain.vo.businessStatistics.BusinessStatisticsVo;
@@ -51,27 +54,39 @@ public class BuyEarlyStatisticsController extends BaseController {
 
     /**
      * 获取提前购票数据统计
+     * @param dto 日期类型
      */
-    @GetMapping("/getBuyEarlyStatistics/{type}")
-    public AjaxResult getBusinessStatistics(@PathVariable("type") String type) {
-        List<BuyEarlyStatistics> buyEarlyStatisticsList = buyEarlyStatisticsHandler.execute(type);
+    @PostMapping("/getBuyEarlyStatistics")
+    public AjaxResult getBusinessStatistics(@RequestBody BuyEarlyStatisticsDto dto) {
+        List<BuyEarlyStatistics> buyEarlyStatisticsList = buyEarlyStatisticsHandler.execute(dto.getType());
         Assert.notEmpty(buyEarlyStatisticsList,"暂无提前购票数据");
-
-        List<BuyEarlyStatisticsVo> result = Lists.newArrayList();
-        Map<String, List<BuyEarlyStatistics>> map = buyEarlyStatisticsList.stream().collect(Collectors.groupingBy(BuyEarlyStatistics::getRegionName));
-        map.keySet().forEach(s->{
-            List<BuyEarlyStatistics> buyEarlyStatistics = map.get(s);
-            BuyEarlyStatisticsVo vo =  BuyEarlyStatisticsVo.builder()
-                    .regionName(s)
-                    .earlyOneHour(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlyOneHour).sum())
-                    .earlyEight(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlyEight).sum())
-                    .earlySixteen(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlySixteen).sum())
-                    .earlyOneDay(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlyOneDay).sum())
-                    .earlyTwoDay(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlyTwoDay).sum())
-                    .earlyTwoDayOver(buyEarlyStatistics.stream().mapToInt(BuyEarlyStatistics::getEarlyTwoDayOver).sum())
-                    .build();
-            result.add(vo);
-        });
+        List<BuyEarlyStatistics> result = Lists.newArrayList();
+        switch (dto.getSelectType()){
+            //排序取前十条
+            //提前8小时
+            case 2:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlyEight).reversed()).limit(10).collect(Collectors.toList());
+                break;
+           //提前16小时
+            case 3:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlySixteen).reversed()).limit(10).collect(Collectors.toList());
+                break;
+            //提前1天
+            case 4:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlyOneDay).reversed()).limit(10).collect(Collectors.toList());
+                break;
+            //提前2天
+            case 5:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlyTwoDay).reversed()).limit(10).collect(Collectors.toList());
+                break;
+            //提前2天以上
+            case 6:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlyTwoDayOver).reversed()).limit(10).collect(Collectors.toList());
+                break;
+            //提前1小时
+            default:
+                result = buyEarlyStatisticsList.stream().sorted(Comparator.comparing(BuyEarlyStatistics::getEarlyOneHour).reversed()).limit(10).collect(Collectors.toList());
+        }
         return AjaxResult.success(result);
     }
 
