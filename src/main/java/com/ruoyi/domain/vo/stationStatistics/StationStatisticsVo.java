@@ -17,7 +17,7 @@ public class StationStatisticsVo {
     /**x轴数据*/
     List<String> aAxisData;
     /**起始站数据*/
-    List<Integer> startData;
+    List<Object> startData;
     /**终点站数据*/
-    List<Integer> endData;
+    List<Object> endData;
 }

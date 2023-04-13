@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,9 +57,11 @@ public class StationSearchRateStatisticsController extends BaseController {
         //x轴数据
         Set<String> aAxisData = Sets.newHashSet();
         Sets.union(startRegionName,endRegionName).copyInto(aAxisData);
-        result.setAAxisData(Lists.newArrayList(aAxisData));
+        List<String> strings = Lists.newArrayList(aAxisData);
+        strings.add(0,"product");
+        result.setAAxisData(strings);
         //起始站数据
-        List<Integer> startData = Lists.newArrayList();
+        List<Object> startData = Lists.newArrayList("起始站");
         aAxisData.forEach(s->{
             List<StartSearchRateStatistics> list = startMap.get(s);
             if(CollectionUtil.isEmpty(list)){
@@ -71,7 +74,7 @@ public class StationSearchRateStatisticsController extends BaseController {
         result.setStartData(startData);
 
         //终点站数据
-        List<Integer> endData = Lists.newArrayList();
+        List<Object> endData = Lists.newArrayList("终点站");
         aAxisData.forEach(s->{
             List<EndSearchRateStatistics> list = endMap.get(s);
             if(CollectionUtil.isEmpty(list)){
@@ -84,5 +87,6 @@ public class StationSearchRateStatisticsController extends BaseController {
         result.setEndData(endData);
         return AjaxResult.success(result);
     }
+
 
 }
