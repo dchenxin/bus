@@ -43,7 +43,7 @@ public class RealLoadStatisticsController extends BaseController {
         Assert.notEmpty(execute,"暂无实载率数据");
         //返回数据
         RealLoadStatisticsVo result = new RealLoadStatisticsVo();
-        result.setAAxisData(execute.stream().map(RealLoadStatistics::getRegionName).collect(Collectors.toList()));
+        result.setAAxisData(execute.stream().map(RealLoadStatistics::getLineName).collect(Collectors.toList()));
         result.setData(execute.stream().map(RealLoadStatistics::getRealLoadRate).collect(Collectors.toList()));
         return AjaxResult.success(result);
     }
